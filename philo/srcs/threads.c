@@ -6,7 +6,7 @@
 /*   By: romachad <romachad@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/29 05:07:54 by romachad          #+#    #+#             */
-/*   Updated: 2023/08/31 03:43:17 by romachad         ###   ########.fr       */
+/*   Updated: 2023/08/31 05:10:57 by romachad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,8 +25,9 @@ void	*thread_cicle(void *philo_index)
 		pthread_create(&philo->death_thread, NULL, &death_thread, philo_index);
 		philo_loop(philo);
 		pthread_detach(philo->death_thread);
+		if (philo->count_eat == philo->sim->max_eat)
+			return (NULL);
 	}
-
 	return (NULL);
 }
 
@@ -55,8 +56,11 @@ void	*death_thread(void *philo_index)
 		philo->sim->is_dead = 1;
 		//printf("Philo %i has died."\
 	//		       " CT: %ld. Diff: %ld\n",philo->id, get_time() - philo->sim->t_start, time - philo->t_last_eat);
+		//pthread_mutex_lock(&philo->sim->print);
+		//printf("%ld\tPhilo %i has died.\n",(get_time() - philo->sim->t_start)/1000,philo->id);
+		//pthread_mutex_unlock(&philo->sim->print);
 		pthread_mutex_lock(&philo->sim->print);
-		printf("%ld\tPhilo %i has died.\n",(get_time() - philo->sim->t_start)/1000,philo->id);
+		printf("%ld\t %i died\n",(get_time() - philo->sim->t_start)/1000,philo->id);
 		pthread_mutex_unlock(&philo->sim->print);
 		pthread_mutex_unlock(&philo->sim->control_death);
 	}

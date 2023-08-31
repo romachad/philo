@@ -6,7 +6,7 @@
 /*   By: romachad <romachad@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/26 18:14:31 by romachad          #+#    #+#             */
-/*   Updated: 2023/08/30 23:10:09 by romachad         ###   ########.fr       */
+/*   Updated: 2023/08/31 04:23:03 by romachad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,9 @@ static int	check_args(int argc, char **argv)
 	}
 	if (ft_atoi(argv[1]) < 1)
 		return (printf("philo: there must be at least one philo!\n"));
+	if (argc == 6)
+		if (ft_atoi(argv[5]) < 1)
+			return (printf("Number of meals must be one or greater\n"));
 	return (0);
 }
 
@@ -76,7 +79,7 @@ int	main(int argc, char **argv)
 
 	init(&table, argc, argv);
 
-	printf("start time: %ld\n", table.simulation.t_start);
+	//printf("start time: %ld\n", table.simulation.t_start);
 	table.philos = malloc(table.simulation.n_philos * sizeof(t_philo));
 	//table.philos = malloc(2 * sizeof(t_philo));
 	load(&table);

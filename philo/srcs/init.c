@@ -6,7 +6,7 @@
 /*   By: romachad <romachad@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/28 23:56:00 by romachad          #+#    #+#             */
-/*   Updated: 2023/08/31 01:33:59 by romachad         ###   ########.fr       */
+/*   Updated: 2023/08/31 04:54:36 by romachad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,6 @@ void	init(t_table *table, int argc, char **argv)
 	table->simulation.max_eat = -1;
 	if (argc == 6)
 		table->simulation.max_eat = ft_atoi(argv[5]);
-	//table->simulation.t_start = get_time(); //move this to after ready to start threads;
 }
 
 
@@ -40,7 +39,6 @@ void	load(t_table *table)
 		table->philos[i].count_eat = 0;
 		table->philos[i].t_last_eat = table->simulation.t_start;
 		table->philos[i].eating = 0;
-		//table->philos[i].is_dead = 0;
 		pthread_mutex_init(&table->philos[i].fork, NULL);
 		// if ONLY ONE PHILO!!! IMPLEMENTAR AQUI
 		if (i > 0)
@@ -62,9 +60,8 @@ void	create_threads(t_table *table)
 	while (++i < table->simulation.n_philos)
 	{
 		table->philos[i].sim = &table->simulation;
+		table->philos[i].t_last_eat = get_time();
 		pthread_create(&table->philos[i].p_thread, NULL, &thread_cicle, &table->philos[i]);
-	//	pthread_create(&table->philos[i].death_thread, NULL, &death_thread, &table->philos[i]);
-	//	pthread_detach(table->philos[i].death_thread);
 	}
 	i = -1;
 	while (++i < table->simulation.n_philos)

@@ -6,7 +6,7 @@
 /*   By: romachad <romachad@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/26 18:29:57 by romachad          #+#    #+#             */
-/*   Updated: 2023/08/31 00:36:50 by romachad         ###   ########.fr       */
+/*   Updated: 2023/08/31 04:36:23 by romachad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ typedef struct s_philo
 	int	id;
 	int	count_eat;
 	uint64_t	t_last_eat;
-	char	eating;
+	char	eating; //NOT CURRENTLY IN USE..
 	//char	is_dead;
 	pthread_t	p_thread;
 	pthread_t	death_thread;
