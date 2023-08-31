@@ -6,7 +6,7 @@
 /*   By: romachad <romachad@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/26 18:29:57 by romachad          #+#    #+#             */
-/*   Updated: 2023/08/29 06:02:09 by romachad         ###   ########.fr       */
+/*   Updated: 2023/08/31 00:36:50 by romachad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,10 @@ typedef struct	s_sim
 	uint64_t	t_sleep;
 	int	max_eat;
 	uint64_t	t_start;
+	char	is_dead;
+	pthread_mutex_t	control_eat;
+	pthread_mutex_t	control_death;
+	pthread_mutex_t	print;
 }	t_sim;
 
 typedef struct s_philo
@@ -35,7 +39,10 @@ typedef struct s_philo
 	int	id;
 	int	count_eat;
 	uint64_t	t_last_eat;
+	char	eating;
+	//char	is_dead;
 	pthread_t	p_thread;
+	pthread_t	death_thread;
 	pthread_mutex_t	fork;
 	pthread_mutex_t	*n_fork;
 	t_sim	*sim;
@@ -53,5 +60,8 @@ void	load(t_table *table);
 uint64_t	get_time(void);
 void	create_threads(t_table *table);
 void	*thread_cicle(void *philo_index);
+void	*death_thread(void *philo_index);
+int		is_dead(t_philo *philo);
+void	philo_loop(t_philo *philo);
 
 #endif

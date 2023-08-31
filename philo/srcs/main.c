@@ -6,7 +6,7 @@
 /*   By: romachad <romachad@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/26 18:14:31 by romachad          #+#    #+#             */
-/*   Updated: 2023/08/29 05:00:36 by romachad         ###   ########.fr       */
+/*   Updated: 2023/08/30 23:10:09 by romachad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,6 +59,9 @@ int	main(int argc, char **argv)
 	//uint64_t	start;
 	//uint64_t	end;
 	t_table	table;
+	
+	//printf("40: %d\n41: %d\n44: %d\n45: %d\n46: %d\n49: %d\n", 40/10, 41/10, 44/10, 45/10, 46/10, 49/10);
+
 
 	if (check_args(argc, argv) != 0)
 		return (1);
