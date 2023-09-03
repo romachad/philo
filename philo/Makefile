@@ -1,7 +1,7 @@
 NAME = philo
 CC = cc
 CFLAGS = -Wall -Wextra -Werror -pthread
-SRCS_FILES = main ft_atoi init threads loops
+SRCS_FILES = main ft_atoi init threads loops eat_loop one_philo
 SRCS_DIR = srcs/
 HEADERS_FILES = philo
 HEADERS_DIR = headers/

@@ -6,7 +6,7 @@
 /*   By: romachad <romachad@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/26 18:29:57 by romachad          #+#    #+#             */
-/*   Updated: 2023/09/02 04:58:31 by romachad         ###   ########.fr       */
+/*   Updated: 2023/09/03 01:59:52 by romachad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,10 +47,8 @@ typedef struct s_philo
 	int				count_eat;
 	int				l_race;
 	uint64_t		t_last_eat;
-	//char	eating; //NOT CURRENTLY IN USE..
 	unsigned char	turn;
 	unsigned char	l_turn;
-	//char	is_dead;
 	pthread_t		p_thread;
 	pthread_t		death_thread;
 	t_sim			*sim;
@@ -65,11 +63,13 @@ typedef struct s_table
 uint64_t	get_time(void);
 int			ft_atoi(const char *nptr);
 int			is_dead(t_philo *philo);
+int			going_to_eat(t_philo *philo);
 void		init(t_table *table, int argc, char **argv);
 void		load(t_table *table);
 void		create_threads(t_table *table);
 void		*thread_cicle(void *philo_index);
 void		*death_thread(void *philo_index);
 void		philo_loop(t_philo *philo);
+void		single_philo(t_table *table);
 
 #endif
