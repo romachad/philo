@@ -24,11 +24,9 @@ $(NAME): $(HEADERS) $(OBJS)
 clean:
 	rm -rf $(OBJS_DIR)
 
-fclean:
-	rm -rf $(OBJS_DIR)
+fclean: clean
 	rm -rf $(NAME)
 
-re:
-	fclean all
+re: fclean all
 
 .PHONY: all clean fclean re

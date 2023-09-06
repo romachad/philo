@@ -6,7 +6,7 @@
 /*   By: romachad <romachad@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/28 23:56:00 by romachad          #+#    #+#             */
-/*   Updated: 2023/09/03 02:28:16 by romachad         ###   ########.fr       */
+/*   Updated: 2023/09/06 01:43:25 by romachad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ void	init(t_table *table, int argc, char **argv)
 	table->simulation.is_dead = 0;
 	table->simulation.d_thread = 0;
 	table->simulation.race = 0;
-	if (table->simulation.n_philos > 4 && table->simulation.n_philos % 2 == 1)
+	if (table->simulation.n_philos > 2 && table->simulation.n_philos % 2 == 1)
 		table->simulation.race = 1;
 	table->simulation.global_turn = 0;
 	table->simulation.max_eat = -1;
@@ -40,7 +40,8 @@ static void	load_philos(t_table *table)
 		table->philos[i].count_eat = 0;
 		table->philos[i].t_last_eat = table->simulation.t_start;
 		table->philos[i].turn = i % 2;
-		if (table->philos[i].id == table->simulation.n_philos)
+		if (table->philos[i].id == table->simulation.n_philos \
+				&& table->simulation.n_philos % 2 == 1)
 			table->philos[i].turn = 2;
 		table->philos[i].l_race = table->simulation.race;
 		pthread_mutex_init(&table->philos[i].fork, NULL);
