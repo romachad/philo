@@ -6,7 +6,7 @@
 /*   By: romachad <romachad@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/28 23:56:00 by romachad          #+#    #+#             */
-/*   Updated: 2023/09/08 06:24:53 by romachad         ###   ########.fr       */
+/*   Updated: 2023/09/08 08:24:32 by romachad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,7 @@ void	init(t_sim *simulation, int argc, char **argv)
 
 void	create_pids(t_sim *simulation)
 {
+	sem_t	*temp;
 	t_philo	philo;
 	int		i;
 
@@ -39,6 +40,8 @@ void	create_pids(t_sim *simulation)
 	philo.t_last_eat = simulation->t_start;
 	philo.sim = simulation;
 	philo.count_eat = 0;
+	temp = sem_open("/1", O_CREAT | O_EXCL, S_IRUSR | S_IWUSR, 0);
+	sem_close(temp);
 	i = -1;
 	while (++i < simulation->n_philos)
 	{

@@ -6,7 +6,7 @@
 /*   By: romachad <romachad@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/26 18:14:31 by romachad          #+#    #+#             */
-/*   Updated: 2023/09/08 06:17:15 by romachad         ###   ########.fr       */
+/*   Updated: 2023/09/08 08:09:24 by romachad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,5 +77,8 @@ int	main(int argc, char **argv)
 	sem_unlink("/print");
 	sem_unlink("/dead");
 	sem_unlink("/can_eat");
+	sem_unlink("/1");
+	sem_unlink("/2");
+	sem_unlink("/3");
 	return (0);
 }

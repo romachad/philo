@@ -6,7 +6,7 @@
 /*   By: romachad <romachad@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/26 18:29:57 by romachad          #+#    #+#             */
-/*   Updated: 2023/09/08 06:29:25 by romachad         ###   ########.fr       */
+/*   Updated: 2023/09/08 08:24:25 by romachad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,8 @@ int			ft_atoi(const char *nptr);
 void		init(t_sim *simulation, int argc, char **argv);
 void		create_pids(t_sim *sim);
 void		wait_pid(t_sim *sim);
+void		wait_turn(t_philo *philo);
+void		clear_sem(t_philo *philo);
 int			philo_pid(t_philo *table);
 char		*ft_strjoin(char const *s1, char const *s2);
 char		*ft_itoa(int n);
