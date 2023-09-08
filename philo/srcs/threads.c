@@ -6,7 +6,7 @@
 /*   By: romachad <romachad@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/29 05:07:54 by romachad          #+#    #+#             */
-/*   Updated: 2023/09/02 19:23:44 by romachad         ###   ########.fr       */
+/*   Updated: 2023/09/08 06:53:09 by romachad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,7 +81,6 @@ static void	*death_or_max_eat(t_philo *philo)
 
 void	*death_thread(void *philo_index)
 {
-	uint64_t	last_eat;
 	t_philo		*philo;
 
 	philo = (t_philo *)philo_index;
