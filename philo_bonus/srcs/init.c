@@ -6,7 +6,7 @@
 /*   By: romachad <romachad@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/28 23:56:00 by romachad          #+#    #+#             */
-/*   Updated: 2023/09/06 04:57:14 by romachad         ###   ########.fr       */
+/*   Updated: 2023/09/08 03:39:53 by romachad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@ void	init(t_table *table, int argc, char **argv)
 	table->simulation.race = 0;
 	table->simulation.forks = sem_open("/forks", O_CREAT | O_EXCL, S_IRUSR | S_IWUSR, table->simulation.n_philos);
 	table->simulation.print = sem_open("/print", O_CREAT | O_EXCL, S_IRUSR | S_IWUSR, 1);
+	table->simulation.can_eat = sem_open("/can_eat", O_CREAT | O_EXCL, S_IRUSR | S_IWUSR, table->simulation.n_philos / 2);
 	if (table->simulation.n_philos > 2 && table->simulation.n_philos % 2 == 1)
 		table->simulation.race = 1;
 	table->simulation.global_turn = 0;
@@ -40,19 +41,11 @@ void	load_philos(t_table *table)
 	{
 		table->philos[i].id = i + 1;
 		table->philos[i].count_eat = 0;
-		table->philos[i].t_last_eat = table->simulation.t_start;
 		table->philos[i].turn = i % 2;
 		if (table->philos[i].id == table->simulation.n_philos \
 				&& table->simulation.n_philos % 2 == 1)
 			table->philos[i].turn = 2;
 		table->philos[i].l_race = table->simulation.race;
-		/*pthread_mutex_init(&table->philos[i].fork, NULL);
-		if (i > 0 && table->simulation.n_philos > 1)
-		{
-			table->philos[i - 1].n_fork = &table->philos[i].fork;
-			if (i == table->simulation.n_philos - 1)
-				table->philos[i].n_fork = &table->philos[0].fork;
-		}*/
 	}
 }
 
@@ -87,23 +80,68 @@ void	load_philos(t_table *table)
 void	create_pids(t_table *table)
 {
 	int	i;
+	char *str;
 
+	i = 5;
+	printf("%i / 2 = %i\n", i, i / 2);
+	i = 7;
+	printf("%i / 2 = %i\n", i, i / 2);
 	table->simulation.pid = malloc(table->simulation.n_philos * sizeof(int));
 	table->simulation.t_start = get_time();
 	i = -1;
 	while (++i < table->simulation.n_philos)
 	{
+	str = ft_itoa(i);
+	table->philos[i].philo_n = ft_strjoin("/philo_", str);
+	free(str);
+	table->philos[i].control_death = sem_open(table->philos[i].philo_n, O_CREAT | O_EXCL, S_IRUSR | S_IWUSR, 1);
+		table->philos[i].t_last_eat = table->simulation.t_start;
 		table->philos[i].sim = &table->simulation;
 		table->simulation.pid[i] = fork();
 		if (table->simulation.pid[i] == 0)
 			philo_pid(table, i);
+		else
+			sem_close(table->philos[i].control_death);
 	}
 	i = -1;
-	while (++i < table->simulation.n_philos)
-		waitpid(table->simulation.pid[i], NULL, 0);
+	while (1)
+	{
+		int pid_end;
+		int status;
+		int exit_s;
+		pid_end = waitpid(-1, &status, WNOHANG);
+		if (pid_end > 0)
+		{
+			if (WIFEXITED(status)){
+				exit_s = WEXITSTATUS(status);
+			}
+			else
+				exit_s = -1;
+			printf("Esse cabou: %d , status: %d\n", pid_end, exit_s);
+			i = -1;
+			while (++i < table->simulation.n_philos)
+			{
+				if (table->simulation.pid[i] != pid_end)
+				{
+					//printf("vou matar: %d, id: %d\n", table->simulation.pid[i], table->philos[i].id);
+					kill(table->simulation.pid[i], SIGKILL);
+				}
+				sem_unlink(table->philos[i].philo_n);
+				free(table->philos[i].philo_n);
+			}
+			printf("matei todos?\n");
+			//usleep(30000000);
+			break ;
+		}
+	}
 	free(table->simulation.pid);
 	sem_close(table->simulation.forks);
+	sem_close(table->simulation.print);
+	sem_close(table->simulation.can_eat);
 	sem_unlink("/forks"); 
+	sem_unlink("/print");
+	sem_unlink("/dead");
+	sem_unlink("/can_eat");
 	free(table->philos);
 	
 
