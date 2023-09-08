@@ -1,7 +1,7 @@
 NAME = philo_bonus
 CC = cc
-CFLAGS = -g -o -Wall -Wextra -Werror -pthread
-SRCS_FILES = main ft_atoi ft_strjoin ft_itoa init philo_pid control
+CFLAGS = -Wall -Wextra -Werror -pthread
+SRCS_FILES = main ft_atoi ft_strjoin ft_itoa init philo_pid wait
 SRCS_DIR = srcs/
 HEADERS_FILES = philo
 HEADERS_DIR = headers/

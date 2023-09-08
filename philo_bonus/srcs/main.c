@@ -6,7 +6,7 @@
 /*   By: romachad <romachad@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/26 18:14:31 by romachad          #+#    #+#             */
-/*   Updated: 2023/09/08 05:06:11 by romachad         ###   ########.fr       */
+/*   Updated: 2023/09/08 06:17:15 by romachad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,17 +58,24 @@ uint64_t	get_time(void)
 
 int	main(int argc, char **argv)
 {
-	//t_table	table;
 	t_sim	simul;
 
 	if (check_args(argc, argv) != 0)
 		return (1);
-	//init(&table, argc, argv);
+	sem_unlink("/forks");
+	sem_unlink("/print");
+	sem_unlink("/dead");
+	sem_unlink("/can_eat");
 	init(&simul, argc, argv);
-	//table.philos = malloc(table.simulation.n_philos * sizeof(t_philo));
-	//load(&table); --> mutex init...
-	//load_philos(&table);
-	//create_pids(&table);
 	create_pids(&simul);
+	wait_pid(&simul);
+	free(simul.pid);
+	sem_close(simul.forks);
+	sem_close(simul.print);
+	sem_close(simul.can_eat);
+	sem_unlink("/forks");
+	sem_unlink("/print");
+	sem_unlink("/dead");
+	sem_unlink("/can_eat");
 	return (0);
 }
