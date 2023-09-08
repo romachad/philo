@@ -6,7 +6,7 @@
 /*   By: romachad <romachad@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/06 02:52:46 by romachad          #+#    #+#             */
-/*   Updated: 2023/09/08 03:38:34 by romachad         ###   ########.fr       */
+/*   Updated: 2023/09/08 05:14:11 by romachad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,9 +37,9 @@
 	}
 }*/
 
-/*static void	end(t_philo *philo)
+static void	end(t_philo *philo)
 {
-	int	i;
+	/*int	i;
 
 	
 	sem_wait(philo->control_thread);
@@ -60,16 +60,34 @@
 	sem_close(philo->sim->can_eat);
 	free(philo->philo_n);
 	//free(table->philos);
-	free(philo);
+	free(philo);*/
+
+	sem_wait(philo->sim->print);
+	printf("%ld\t %i died\n", (get_time() - philo->sim->t_start)/ 1000, philo->id);
+	//sem_close(philo->control_death);
+	sem_close(philo->sim->forks);
+	sem_close(philo->sim->print);
+	sem_close(philo->sim->can_eat);
+	//free(philo->philo_n);
+
+	//free(philo);
+
+
+
+
+
+
 	exit(1);
-}*/
+}
 
 static int	take_fork(t_philo *philo)
 {
 	//if (is_dead(philo) == 1)
 	//	return (1);
 	sem_wait(philo->sim->forks);
-	sem_wait(philo->control_death);
+	if (get_time() >= (philo->sim->t_die + philo->t_last_eat))
+		end(philo);
+	//sem_wait(philo->control_death);
 	/*if (philo->is_dead == 1)
 		end(philo);*/
 	sem_wait(philo->sim->print);
@@ -82,7 +100,7 @@ static int	take_fork(t_philo *philo)
 	}*/
 	printf("%ld\t %i has taken a fork\n", \
 			(get_time() - philo->sim->t_start) / 1000, philo->id);
-	sem_post(philo->control_death);
+	//sem_post(philo->control_death);
 	sem_post(philo->sim->print);
 	//sem_post(philo->control_death);
 	/*if (is_dead(philo) == 1)
@@ -95,25 +113,28 @@ static int	take_fork(t_philo *philo)
 
 static void	philo_loop(t_philo *philo)
 {
-	sem_wait(philo->control_death);
-	sem_post(philo->control_death);
-	
+	//sem_wait(philo->control_death);
+	//sem_post(philo->control_death);
+	if (get_time() >= (philo->sim->t_die + philo->t_last_eat))
+		end(philo);
 	sem_wait(philo->sim->can_eat);
-	sem_wait(philo->control_death);
-	sem_post(philo->control_death);
+	//sem_wait(philo->control_death);
+	//sem_post(philo->control_death);
 	
 	take_fork(philo);
+	if (get_time() >= (philo->sim->t_die + philo->t_last_eat))
+		end(philo);
 	take_fork(philo);
 
 	//EAT
-	sem_wait(philo->control_death);
+	//sem_wait(philo->control_death);
 	sem_wait(philo->sim->print);
 	printf("%ld\t %i is eating\n", \
 			(get_time() - philo->sim->t_start) / 1000, philo->id);
 	sem_post(philo->sim->print);
 	philo->count_eat++;
 	philo->t_last_eat = get_time();
-	sem_post(philo->control_death);
+	//sem_post(philo->control_death);
 	usleep(philo->sim->t_eat);
 
 	sem_post(philo->sim->forks);
@@ -125,27 +146,31 @@ static void	philo_loop(t_philo *philo)
 	
 
 	//Sleep;
-	sem_wait(philo->control_death);
+	//sem_wait(philo->control_death);
+	if (get_time() >= (philo->sim->t_die + philo->t_last_eat))
+		end(philo);
 	sem_wait(philo->sim->print);
 	printf("%ld\t %i is sleeping\n", \
 			(get_time() - philo->sim->t_start) / 1000, philo->id);
 	sem_post(philo->sim->print);
-	sem_post(philo->control_death);
+	//sem_post(philo->control_death);
 	usleep(philo->sim->t_sleep);
 
 	
 
-	sem_wait(philo->control_death);
+	//sem_wait(philo->control_death);
+	if (get_time() >= (philo->sim->t_die + philo->t_last_eat))
+		end(philo);
 	sem_wait(philo->sim->print);
 	printf("%ld\t %i is thinking\n", \
 			(get_time() - philo->sim->t_start) / 1000, philo->id);
 	sem_post(philo->sim->print);
-	sem_post(philo->control_death);
+	//sem_post(philo->control_death);
 
 
 }
 
-static void	*death_thread(void *philo_index)
+/*static void	*death_thread(void *philo_index)
 {
 	uint64_t	last_eat;
 	t_philo		*philo;
@@ -170,23 +195,21 @@ static void	*death_thread(void *philo_index)
 	}
 	sem_post(philo->control_death);
 	return (NULL);
-}
+}*/
 
-int	philo_pid(t_table *table, int i)
+//int	philo_pid(t_table *table, int i)
+int	philo_pid(t_philo *philo)
 {
 	char	*str;
 
-	free(table->simulation.pid);
+	free(philo->sim->pid);
 	while (1)
 	{
-		pthread_create(&table->philos[i].death_thread, NULL, &death_thread, &table->philos[i]);
-		philo_loop(&table->philos[i]);
-		pthread_detach(table->philos[i].death_thread);
-		if (table->simulation.max_eat == table->philos[i].count_eat)
+		philo_loop(philo);
+		if (philo->sim->max_eat == philo->count_eat)
 			break;
 	}
-	sem_close(table->philos[i].control_death);
-	free(table->philos[i].philo_n);
-	free(table->philos);
+	//free(table->philos);
+	end(philo);
 	exit (0);
 }

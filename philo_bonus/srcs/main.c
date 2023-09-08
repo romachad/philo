@@ -6,7 +6,7 @@
 /*   By: romachad <romachad@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/26 18:14:31 by romachad          #+#    #+#             */
-/*   Updated: 2023/09/06 04:48:12 by romachad         ###   ########.fr       */
+/*   Updated: 2023/09/08 05:06:11 by romachad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,14 +58,17 @@ uint64_t	get_time(void)
 
 int	main(int argc, char **argv)
 {
-	t_table	table;
+	//t_table	table;
+	t_sim	simul;
 
 	if (check_args(argc, argv) != 0)
 		return (1);
-	init(&table, argc, argv);
-	table.philos = malloc(table.simulation.n_philos * sizeof(t_philo));
+	//init(&table, argc, argv);
+	init(&simul, argc, argv);
+	//table.philos = malloc(table.simulation.n_philos * sizeof(t_philo));
 	//load(&table); --> mutex init...
-	load_philos(&table);
-	create_pids(&table);
+	//load_philos(&table);
+	//create_pids(&table);
+	create_pids(&simul);
 	return (0);
 }
